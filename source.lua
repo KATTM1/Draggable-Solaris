@@ -166,7 +166,7 @@ print("SolarisLib Loaded!")
 local function MakeDraggable(topbarobject, object) 
     pcall(function()
 		local UIS = game:GetService('UserInputService')
-local frame = topbarobject or object
+local frame = object
 local dragToggle = nil
 local dragSpeed = 0.25
 local dragStart = nil

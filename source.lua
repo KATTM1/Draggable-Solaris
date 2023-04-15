@@ -1,3 +1,5 @@
+--Thank for source : ShaXz#2523
+
 -- This User Interface Library is brought to you by Solaris Software.
 local Solaris = Instance.new("ScreenGui")
 Solaris.Name = "dosage's solaris gui"
@@ -159,14 +161,9 @@ local SolarisLib = {
     CurrentTab
 }
 
-
-
-local MainUI = game:GetObjects("rbxassetid://7835727566")[1]
-print("SolarisLib Loaded!")
-local function MakeDraggable(topbarobject, object) 
-    pcall(function()
-		local UIS = game:GetService('UserInputService')
-local frame = object
+--[[
+local UIS = game:GetService('UserInputService')
+local frame = script.Parent--or your ui parent
 local dragToggle = nil
 local dragSpeed = 0.25
 local dragStart = nil
@@ -199,6 +196,37 @@ UIS.InputChanged:Connect(function(input)
   end
  end
 end)
+--]]
+
+local MainUI = game:GetObjects("rbxassetid://7835727566")[1]
+print("SolarisLib Loaded!")
+local function MakeDraggable(topbarobject, object) 
+    pcall(function()
+		local dragging, dragInput, mousePos, framePos = false
+		topbarobject.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				dragging = true
+				mousePos = input.Position
+				framePos = object.Position
+
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						dragging = false
+					end
+				end)
+			end
+		end)
+		topbarobject.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseMovement then
+				dragInput = input
+			end
+		end)
+		UserInputService.InputChanged:Connect(function(input)
+			if input == dragInput or input == or input.UserInputType == Enum.UserInputType.Touch and dragging then
+				local delta = input.Position - mousePos
+				object.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+			end
+		end)
 	end)
 end
 
